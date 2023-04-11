@@ -1,0 +1,32 @@
+public class broken_links {
+WebDriver driver;
+	
+	public String URL="https://rahulshettyacademy.com/AutomationPractice/";
+	
+	@BeforeTest()
+	public void testcase() {
+ WebDriverManager.chromedriver().setup();
+ driver=new ChromeDriver();
+ driver.get(URL);
+ driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+	}
+	
+	@Test()
+	public void testcase2() throws InterruptedException, MalformedURLException, IOException {
+ WebElement footer = driver.findElement(By.id("gf-BIG")); // this is the way to limit the scope
+ System.out.println(footer.findElements(By.tagName("a")).size());
+ List<WebElement> links=	footer.findElements(By.tagName("a"));
+ for(int i=1; i<links.size(); i++) {
+ String url= links.get(i).getAttribute("href");
+ System.out.println(url);
+ 
+ //method in java to check weather the url is working or not --> openConnection
+ HttpURLConnection conn= (HttpURLConnection)new URL(url).openConnection();
+ conn.setRequestMethod("HEAD");
+ conn.connect(); // connect with the urls
+ int response_code= conn.getResponseCode(); //fetch the response codes
+ System.out.println(response_code);
+ }
+ driver.close();
+	
+	}
